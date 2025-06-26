@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scopri il Tuo Stile di Lavoro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FBB714 0%, #46935C 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        .shape:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            left: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            left: 80%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #46935C;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #46935C;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .question {
+            background: linear-gradient(135deg, #FBB714, #46935C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: #FBB714;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #FBB714, #46935C);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(251, 183, 20, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #FBB714, #46935C);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 2rem auto 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(251, 183, 20, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(251, 183, 20, 0.4);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FBB714, #46935C);
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .result-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .result-title {
+            color: #46935C;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .result-description {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-traits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .trait {
+            background: linear-gradient(135deg, rgba(251, 183, 20, 0.1), rgba(70, 147, 83, 0.1));
+            border-radius: 12px;
+            padding: 1rem;
+            border-left: 4px solid #FBB714;
+        }
+
+        .trait-title {
+            color: #46935C;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .start-btn {
+            font-size: 1.3rem;
+            padding: 1.5rem 3rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape" style="width: 100px; height: 100px; background: rgba(251, 183, 20, 0.1); border-radius: 50%;"></div>
+        <div class="shape" style="width: 80px; height: 80px; background: rgba(70, 147, 83, 0.1); border-radius: 50%;"></div>
+        <div class="shape" style="width: 120px; height: 120px; background: rgba(251, 183, 20, 0.1); border-radius: 50%;"></div>
+    </div>
+
+    <div class="quiz-container">
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome">
+            <h1> Scopri il Tuo Stile di Lavoro</h1>
+            <p class="subtitle">
+                Un quiz interattivo per comprendere il tuo approccio unico al lavoro e scoprire i tuoi punti di forza professionali.
+            </p>
+            <div style="text-align: center; margin: 2rem 0;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
+                <p style="color: #666;">Rispondi a 8 domande e ottieni il tuo profilo personalizzato</p>
+            </div>
+            <button class="btn start-btn" onclick="startQuiz()">Inizia il Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="screen" id="quiz">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Avanti</button>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="screen" id="result">
+            <div class="result-card">
+                <div class="result-emoji" id="resultEmoji"></div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-description" id="resultDescription"></div>
+                <div class="result-traits" id="resultTraits"></div>
+            </div>
+            <button class="btn" onclick="restartQuiz()">Rifai il Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Come preferisci organizzare le tue giornate lavorative?",
+                options: [
+                    { text: "Pianificazione dettagliata con orari precisi", type: "organizer" },
+                    { text: "Struttura flessibile che posso adattare", type: "adapter" },
+                    { text: "Libertà totale di scegliere cosa fare", type: "creator" },
+                    { text: "Seguire il flusso delle priorità del team", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Quando affronti un nuovo progetto, il tuo primo istinto è:",
+                options: [
+                    { text: "Creare un piano dettagliato prima di iniziare", type: "organizer" },
+                    { text: "Iniziare subito e adattarmi lungo il percorso", type: "adapter" },
+                    { text: "Esplorare soluzioni innovative e creative", type: "creator" },
+                    { text: "Coinvolgere il team per raccogliere idee", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Nelle riunioni di lavoro tendi a:",
+                options: [
+                    { text: "Preparare un'agenda e guidare la discussione", type: "organizer" },
+                    { text: "Contribuire quando necessario e adattarti al flusso", type: "adapter" },
+                    { text: "Proporre idee fuori dagli schemi", type: "creator" },
+                    { text: "Facilitare la partecipazione di tutti", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Come gestisci le scadenze pressanti?",
+                options: [
+                    { text: "Creo una timeline precisa e la seguo rigorosamente", type: "organizer" },
+                    { text: "Mi concentro sulle priorità e mi adatto rapidamente", type: "adapter" },
+                    { text: "Cerco soluzioni creative per accelerare il processo", type: "creator" },
+                    { text: "Coordino il team per distribuire il carico di lavoro", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Il tuo ambiente di lavoro ideale è:",
+                options: [
+                    { text: "Organizzato, pulito e con tutto al suo posto", type: "organizer" },
+                    { text: "Flessibile, che posso riorganizzare secondo le necessità", type: "adapter" },
+                    { text: "Stimolante, con spazi per creatività e ispirazione", type: "creator" },
+                    { text: "Aperto, che favorisce la comunicazione e collaborazione", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Quando ricevi feedback sul tuo lavoro:",
+                options: [
+                    { text: "Lo analizzo sistematicamente per migliorare i processi", type: "organizer" },
+                    { text: "Lo uso per adattare rapidamente il mio approccio", type: "adapter" },
+                    { text: "Lo vedo come spunto per nuove idee innovative", type: "creator" },
+                    { text: "Lo condivido con il team per crescere insieme", type: "collaborator" }
+                ]
+            },
+            {
+                question: "La tua motivazione principale al lavoro è:",
+                options: [
+                    { text: "Raggiungere obiettivi chiari e misurabili", type: "organizer" },
+                    { text: "Superare sfide sempre nuove e diverse", type: "adapter" },
+                    { text: "Creare qualcosa di originale e significativo", type: "creator" },
+                    { text: "Contribuire al successo del team", type: "collaborator" }
+                ]
+            },
+            {
+                question: "Come preferisci imparare nuove competenze?",
+                options: [
+                    { text: "Corsi strutturati con obiettivi chiari", type: "organizer" },
+                    { text: "Imparando sul campo attraverso l'esperienza", type: "adapter" },
+                    { text: "Sperimentando e esplorando autonomamente", type: "creator" },
+                    { text: "Condividendo conoscenze con colleghi e mentori", type: "collaborator" }
+                ]
+            }
+        ];
+
+        const workStyles = {
+            organizer: {
+                emoji: "📋",
+                title: "L'Organizzatore Strategico",
+                description: "Sei una persona metodica che eccelle nella pianificazione e nell'organizzazione. Ami avere tutto sotto controllo e preferisci lavorare con strutture chiare e obiettivi ben definiti.",
+                traits: [
+                    { title: "Punti di Forza", content: "Pianificazione eccellente, gestione del tempo, leadership organizzativa" },
+                    { title: "Stile di Comunicazione", content: "Diretto, strutturato, orientato ai risultati" },
+                    { title: "Ambiente Ideale", content: "Ruoli di coordinamento, gestione progetti, ambienti strutturati" }
+                ]
+            },
+            adapter: {
+                emoji: "🎯",
+                title: "L'Adattatore Pragmatico",
+                description: "Sei una persona flessibile che sa adattarsi rapidamente ai cambiamenti. Eccelli nel trovare soluzioni pratiche e nel navigare situazioni complesse con agilità.",
+                traits: [
+                    { title: "Punti di Forza", content: "Flessibilità, problem-solving rapido, gestione del cambiamento" },
+                    { title: "Stile di Comunicazione", content: "Pragmatico, orientato alle soluzioni, reattivo" },
+                    { title: "Ambiente Ideale", content: "Ambienti dinamici, ruoli consulenziali, progetti variabili" }
+                ]
+            },
+            creator: {
+                emoji: "🎨",
+                title: "Il Creatore Innovativo",
+                description: "Sei una persona creativa che ama esplorare nuove idee e approcci. La tua forza sta nel pensare fuori dagli schemi e nel trovare soluzioni originali.",
+                traits: [
+                    { title: "Punti di Forza", content: "Creatività, innovazione, pensiero laterale" },
+                    { title: "Stile di Comunicazione", content: "Ispirante, visionario, orientato alle possibilità" },
+                    { title: "Ambiente Ideale", content: "Ruoli creativi, R&D, ambienti che incoraggiano l'innovazione" }
+                ]
+            },
+            collaborator: {
+                emoji: "🤝",
+                title: "Il Collaboratore Sociale",
+                description: "Sei una persona che eccelle nel lavoro di squadra e nella costruzione di relazioni. La tua forza sta nel coinvolgere gli altri e nel creare sinergie di gruppo.",
+                traits: [
+                    { title: "Punti di Forza", content: "Comunicazione interpersonale, team building, empatia" },
+                    { title: "Stile di Comunicazione", content: "Inclusivo, supportivo, orientato alle persone" },
+                    { title: "Ambiente Ideale", content: "Ruoli HR, team leadership, ambienti collaborativi" }
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = { organizer: 0, adapter: 0, creator: 0, collaborator: 0 };
+        let selectedOption = null;
+
+        function startQuiz() {
+            document.getElementById('welcome').classList.remove('active');
+            document.getElementById('quiz').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option.text;
+                optionElement.onclick = () => selectOption(index, option.type);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            updateProgress();
+            selectedOption = null;
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function selectOption(index, type) {
+            // Remove previous selection
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            
+            selectedOption = type;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (selectedOption) {
+                answers[selectedOption]++;
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    setTimeout(showQuestion, 300);
+                } else {
+                    setTimeout(showResult, 300);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResult() {
+            document.getElementById('quiz').classList.remove('active');
+            document.getElementById('result').classList.add('active');
+            
+            // Find the dominant work style
+            const maxScore = Math.max(...Object.values(answers));
+            const dominantStyle = Object.keys(answers).find(style => answers[style] === maxScore);
+            
+            const result = workStyles[dominantStyle];
+            
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultDescription').textContent = result.description;
+            
+            const traitsContainer = document.getElementById('resultTraits');
+            traitsContainer.innerHTML = '';
+            
+            result.traits.forEach(trait => {
+                const traitElement = document.createElement('div');
+                traitElement.className = 'trait';
+                traitElement.innerHTML = `
+                    <div class="trait-title">${trait.title}</div>
+                    <div>${trait.content}</div>
+                `;
+                traitsContainer.appendChild(traitElement);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = { organizer: 0, adapter: 0, creator: 0, collaborator: 0 };
+            selectedOption = null;
+            
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('welcome').classList.add('active');
+        }
+    </script>
+</body>
+</html>
